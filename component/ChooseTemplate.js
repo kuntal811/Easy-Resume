@@ -19,6 +19,8 @@ export default class ChooseTemplate extends Component {
     
     render() {
         let {checkid}  = this.state;
+        console.log('resuem data printing');
+        console.log(this.props.route.params.resumeData);
         return (
             <>
             <ScrollView>
