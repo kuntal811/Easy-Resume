@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, StyleSheet, ScrollView, Image } from 'react-native';
+import { Text, View, TextInput, StyleSheet, ScrollView, Image,Pressable } from 'react-native';
 import { FAB,List, Button,HelperText, Switch,IconButton, Headline, Subheading  } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import * as ImagePicker from 'expo-image-picker';
 
 import ProfileImg from './../assets/profile.png';
+import { ResumeDataContext } from '../ERContext';
+
 
 export default class ProfileDetails extends Component {
     constructor(props) {
@@ -20,7 +22,8 @@ export default class ProfileDetails extends Component {
                 projects:[],
                 skills:[],
                 languages:[],
-                hobbies:[]
+                hobbies:[],
+                custom:[],
             },
             profile:{
                 name:'',
@@ -64,12 +67,16 @@ export default class ProfileDetails extends Component {
             },
             hobbies:{
                 hobbyName:'',
+            },
+            custom:{
+                title:'',
+                sub_title:'',
+                description:'',
             }
         }
     }
     componentWillUnmount(){
-        // before unmounting add profile data to resumeData
-        this._addSectionValue('profile','profile');
+
     }
 
 
@@ -130,16 +137,37 @@ export default class ProfileDetails extends Component {
         this.setState({
             resumeData: resume_data,
         });
+        //this.context.changeState('resumeData',resume_data);
     }
 
     _onSubmit = async()=>{
-        // before unmounting add profile data to resumeData
-            this._addSectionValue('profile','profile');
-            console.log(this.state.resumeData);
-        //this.props.navigation.push('ChooseTemplate',{resumeData:this.state.resumeData});
+
+        // before submitting add profile data to resumeData
+        let sectionName='profile';
+        let stateName='profile';
+        let profile  = [...this.state.resumeData[sectionName],this.state[stateName]]
+        let resume_data = {...this.state.resumeData};
+        resume_data[sectionName] = profile;
+        this.setState({
+            resumeData: resume_data,
+        },()=>{
+            this.props.navigation.push('ChooseTemplate',{resumeData:this.state.resumeData});
+        });
+    }
+
+    _onDelete = (sectionName,arrayIndex) =>{
+        let resumeDataCopy = this.state.resumeData;
+        try{
+            resumeDataCopy[sectionName].splice(arrayIndex,1);
+            this.setState({
+                resumeData : resumeDataCopy
+            });
+        }catch(err){
+            alert('Something went wrong!');
+        }
     }
     render() {
-        console.log(this.state.resumeData);
+        //console.log(this.state.resumeData);
         return (
         <ScrollView>
             <List.Section title="Resume Details" style={{paddingHorizontal:15}}>
@@ -220,7 +248,17 @@ export default class ProfileDetails extends Component {
                                                 title={data.degreeTitle+','+data.instituteName}
                                                 titleNumberOfLines={2}
                                                 description={data.startYear+'-'+data.endYear+', CGPA:'+data.cgpa+'\n'+data.summary}
-                                                right={props => <List.Icon {...props} icon="folder" />}
+                                                right={(props)=>{
+                                                    return <Pressable onPress={
+                                                        ()=>this._onDelete('education',index)
+                                                        
+                                                        }
+                                                        {...props}
+                                                    >
+                                                        <List.Icon icon="close" />
+                                                    </Pressable>
+                                                    }
+                                                }
                                             />
                                 })
                             }
@@ -282,7 +320,7 @@ export default class ProfileDetails extends Component {
                                     end={{x:0.9,y:0.9}}
                                     style={[styles.buttonContainer,{marginBottom:20}]}>
                                     <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('education','education')}>
-                                        Add More
+                                        ADD
                                     </Button>
                             </LinearGradient>
                         </View>
@@ -310,7 +348,17 @@ export default class ProfileDetails extends Component {
                                             title={data.jobTitle+','+data.companyName}
                                             titleNumberOfLines={2}
                                             description={data.startDate+'-'+data.endDate+'\n'+data.summary}
-                                            right={props => <List.Icon {...props} icon="folder" />}
+                                            right={(props)=>{
+                                                    return <Pressable onPress={
+                                                        ()=>this._onDelete('experience',index)
+                                                        
+                                                        }
+                                                        {...props}
+                                                    >
+                                                        <List.Icon icon="close" />
+                                                    </Pressable>
+                                                    }
+                                                }
                                         />
                             })
                         }
@@ -364,7 +412,7 @@ export default class ProfileDetails extends Component {
                                 end={{x:0.9,y:0.9}}
                                 style={[styles.buttonContainer,{marginBottom:20}]}>
                                 <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('experience','experience')}>
-                                    Add More
+                                    ADD
                                 </Button>
                         </LinearGradient>
                     </View>
@@ -392,7 +440,17 @@ export default class ProfileDetails extends Component {
                                             title={data.projectName}
                                             titleNumberOfLines={2}
                                             description={data.projectDescription+'\n'+data.startDate+'-'+data.endDate+'\n'+data.summary}
-                                            right={props => <List.Icon {...props} icon="folder" />}
+                                            right={(props)=>{
+                                                    return <Pressable onPress={
+                                                        ()=>this._onDelete('projects',index)
+                                                        
+                                                        }
+                                                        {...props}
+                                                    >
+                                                        <List.Icon icon="close" />
+                                                    </Pressable>
+                                                    }
+                                            }
                                         />
                             })
                         }
@@ -446,7 +504,7 @@ export default class ProfileDetails extends Component {
                                 end={{x:0.9,y:0.9}}
                                 style={[styles.buttonContainer,{marginBottom:20}]}>
                                 <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('projects','projects')}>
-                                    Add More
+                                    ADD
                                 </Button>
                         </LinearGradient>
                     </View>
@@ -474,7 +532,17 @@ export default class ProfileDetails extends Component {
                                             title={data.skillName}
                                             titleNumberOfLines={2}
                                             description={data.skillLevel}
-                                            right={props => <List.Icon {...props} icon="folder" />}
+                                            right={(props)=>{
+                                                    return <Pressable onPress={
+                                                        ()=>this._onDelete('skills',index)
+                                                        
+                                                        }
+                                                        {...props}
+                                                    >
+                                                        <List.Icon icon="close" />
+                                                    </Pressable>
+                                                    }
+                                                }
                                         />
                             })
                         }
@@ -497,7 +565,7 @@ export default class ProfileDetails extends Component {
                             end={{x:0.9,y:0.9}}
                             style={[styles.buttonContainer,{marginBottom:20}]}>
                                 <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('skills','skills')}>
-                                    Add More
+                                    ADD
                                 </Button>
                         </LinearGradient>
                 </View>
@@ -525,7 +593,17 @@ export default class ProfileDetails extends Component {
                                             key={index}
                                             title={data.hobbyName}
                                             titleNumberOfLines={2}
-                                            right={props => <List.Icon {...props} icon="folder" />}
+                                            right={(props)=>{
+                                                    return <Pressable onPress={
+                                                        ()=>this._onDelete('hobbies',index)
+                                                        
+                                                        }
+                                                        {...props}
+                                                    >
+                                                        <List.Icon icon="close" />
+                                                    </Pressable>
+                                                    }
+                                                }
                                         />
                             })
                         }
@@ -542,7 +620,7 @@ export default class ProfileDetails extends Component {
                             end={{x:0.9,y:0.9}}
                             style={[styles.buttonContainer,{marginBottom:20}]}>
                                 <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('hobbies','hobbies')}>
-                                    Add More
+                                    ADD
                                 </Button>
                         </LinearGradient>
                     </View>
@@ -569,7 +647,17 @@ export default class ProfileDetails extends Component {
                                             key={index}
                                             title={data.languageName}
                                             titleNumberOfLines={2}
-                                            right={props => <List.Icon {...props} icon="folder" />}
+                                            right={(props)=>{
+                                                    return <Pressable onPress={
+                                                        ()=>this._onDelete('languages',index)
+                                                        
+                                                        }
+                                                        {...props}
+                                                    >
+                                                        <List.Icon icon="close" />
+                                                    </Pressable>
+                                                    }
+                                                }
                                         />
                             })
                         }
@@ -592,13 +680,82 @@ export default class ProfileDetails extends Component {
                             end={{x:0.9,y:0.9}}
                             style={[styles.buttonContainer,{marginBottom:20}]}>
                                 <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('languages','languages')}>
-                                    Add More
+                                    ADD
                                 </Button>
                         </LinearGradient>
                     </View>
 
                 </View>
             </List.Accordion>
+
+            {/*#################################  custom Details  #####################################################*/}
+            <List.Accordion
+                
+                title="Custom Section"
+                titleStyle={styles.titleStyle}
+                left={props => <List.Icon {...props} color="#fff" icon="account" />}
+                style={styles.accordian}
+                theme={{colors:{text: '#fff'}}}
+                >
+                <View style={styles.accordianChildContainer}>
+
+                    {/*    show added languages data */}
+                    <View style={styles.dataContainer}>
+                        {
+                            this.state.resumeData.custom.map((data,index)=>{
+                                return <List.Item
+                                            key={index}
+                                            title={data.title}
+                                            description={data.sub_title+'\n'+data.description}
+                                            titleNumberOfLines={2}
+                                            right={(props)=>{
+                                                    return <Pressable onPress={
+                                                        ()=>this._onDelete('custom',index)
+                                                        
+                                                        }
+                                                        {...props}
+                                                    >
+                                                        <List.Icon icon="close" />
+                                                    </Pressable>
+                                                    }
+                                                }
+                                        />
+                            })
+                        }
+                    </View>
+                    <TextInput
+                        placeholder="Title"
+                        style={styles.inputStyle}
+                        value={this.state.custom.title}
+                        onChangeText={(value)=>this._onChangeInput('custom','title',value)}
+                        />
+                        
+                    <TextInput
+                        placeholder="Sub Title"
+                        style={styles.inputStyle}
+                        value={this.state.custom.sub_title}
+                        onChangeText={(value)=>this._onChangeInput('custom','sub_title',value)}
+                        />
+                    <TextInput
+                        placeholder="Description"
+                        style={styles.inputStyle}
+                        value={this.state.custom.description}
+                        onChangeText={(value)=>this._onChangeInput('custom','description',value)}
+                        />
+                    <View style={{alignItems:'center',marginTop:10}}>
+                        <LinearGradient
+                            colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
+                            end={{x:0.9,y:0.9}}
+                            style={[styles.buttonContainer,{marginBottom:20}]}>
+                                <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('custom','custom')}>
+                                    ADD
+                                </Button>
+                        </LinearGradient>
+                    </View>
+
+                </View>
+            </List.Accordion>
+
             </List.Section>
 
             <View style={{marginTop:10}}>
@@ -616,6 +773,9 @@ export default class ProfileDetails extends Component {
         )
     }
 }
+
+ProfileDetails.contextType = ResumeDataContext;
+
 
 const styles = StyleSheet.create({
     background:{

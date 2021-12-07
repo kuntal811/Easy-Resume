@@ -19,7 +19,7 @@ export class Dashboard extends Component {
     }
     
     render() {
-       const userNav = createDrawerNavigator();
+       //const userNav = createDrawerNavigator();
 
        let { navigation } = this.props;
         return (
