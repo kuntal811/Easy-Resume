@@ -3,22 +3,42 @@ import { View, StyleSheet, Dimensions,StatusBar} from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import { Drawer, Text, Avatar } from 'react-native-paper'
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ERContext, useERContext } from '../ERContext';
 import {
     DrawerContentScrollView,
     DrawerItem
 } from '@react-navigation/drawer'
-
-
 import ProfileImg from './../assets/profile.png'
 
 
-export default function DrawerContent(props) {
-    const windowHeight = Dimensions.get('window').height;
-    return (
-           
+async function signOut(){
+    try {
+        await AsyncStorage.removeItem('token',()=>{
+            const ERContext = useERContext();
+            ERContext.changeState('isLoggedIn',false);
+        });
 
-            
-                <DrawerContentScrollView {...props} style={{backgroundColor:'white'}} contentContainerStyle={{paddingTop:0,backgroundColor:'#92B2FD'}}>
+      } catch(e) {
+        console.log(e);
+      }
+}
+class DrawerContent extends React.Component{
+    _signOut = async()=>{
+        try {
+            await AsyncStorage.removeItem('token',()=>{
+                this.context.changeState('isLoggedIn',false);
+            });
+    
+          } catch(e) {
+            console.log(e);
+          }
+    }
+
+    render(){
+        let props = this.props;
+        return (     
+            <DrawerContentScrollView {...props} style={{backgroundColor:'white'}} contentContainerStyle={{paddingTop:0,backgroundColor:'#92B2FD'}}>
 
                     <View style={[styles.bgWhite]} >
                         <View style={styles.profileContainer}>
@@ -33,8 +53,8 @@ export default function DrawerContent(props) {
                                         source={ProfileImg}
                                         size={100}
                                     />
-                                    <Text style={styles.name}>Kuntal Sarkar</Text>
-                                    <Text style={styles.email}>KuntalSarkar00@gmail.com</Text>
+                                    <Text style={styles.name}>{this.context.name}</Text>
+                                    <Text style={styles.email}>{this.context.email}</Text>
                                 </View>
                             </LinearGradient>
                             
@@ -43,23 +63,27 @@ export default function DrawerContent(props) {
                             <Drawer.Section>
                                 <DrawerItem
                                     label="Home"
+                                    labelStyle={styles.drawerLabel}
                                     onPress={()=>{props.navigation.navigate('Dashboard')}}
-                                    icon={()=><MCIcons name="home-variant-outline" size={25}/>}
+                                    icon={()=><MCIcons name="home-variant-outline" color="#555" size={25}/>}
                                 />
                                 <DrawerItem
                                     label="Share App"
+                                    labelStyle={styles.drawerLabel}
                                     onPress={()=>{props.navigation.navigate('Home')}}
-                                    icon={()=><MCIcons name="share-variant" size={25}/>}
+                                    icon={()=><MCIcons name="share-variant" color="#555" size={25}/>}
                                 />
                                 <DrawerItem
                                     label="About"
+                                    labelStyle={styles.drawerLabel}
                                     onPress={()=>{props.navigation.navigate('Home')}}
-                                    icon={()=><MCIcons name="information-variant" size={25}/>}
+                                    icon={()=><MCIcons name="information-variant" color="#555" size={25}/>}
                                 />
                                 <DrawerItem
                                     label="Sign Out"
-                                    onPress={()=>{}}
-                                    icon={()=><MCIcons name="logout" size={25}/>}
+                                    labelStyle={styles.drawerLabel}
+                                    onPress={this._signOut}
+                                    icon={()=><MCIcons name="logout" color="#555" size={25}/>}
                                 />
                             </Drawer.Section>
                             
@@ -69,6 +93,7 @@ export default function DrawerContent(props) {
             
 
     )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -109,4 +134,11 @@ const styles = StyleSheet.create({
     bgWhite:{
         backgroundColor:'#fff'
     },
+    drawerLabel:{
+        fontWeight:'bold',
+        color:'#555'
+    }
 })
+
+DrawerContent.contextType = ERContext;
+export default DrawerContent

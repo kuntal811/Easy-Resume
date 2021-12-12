@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { NavigationContainer, DrawerActions } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import 'react-native-gesture-handler';
-
+import jwt_decode from "jwt-decode";
 
 import OnboardingScreen from './component/OnboardingScreen';
 import SignIn from './component/SignIn';
@@ -22,6 +22,7 @@ import ProfileDetails from './component/ProfileDetails';
 import { ERContext } from './ERContext';
 import UserScreen from './component/UserScreen';
 import DrawerContent from './component/DrawerContent'
+import Loading from './component/Loading';
 
 
 const theme = {
@@ -44,16 +45,24 @@ export default class App extends React.Component{
     super(props)
   
     this.state = {
+       showLoading:true,
        firstTime: false,
-       isLoggedIn: true,
+       isLoggedIn: false,
+       name:'',
+       email:'',
+       token:false,
        isConnected:false,
     }
   }
   
 
   componentDidMount(){
-    this.getData();
+    this.isUserNew();
+    this.isUserLoggedIn();
     this.updateConnection();
+    setTimeout(()=>{
+      this.setState({showLoading:false});
+    },2000)
   }
 
 
@@ -70,25 +79,54 @@ export default class App extends React.Component{
 }
 
 
+  isUserNew = async() =>{
+    try {
+      const jsonValue = await AsyncStorage.getItem('isFirstTime');
+      let value =  jsonValue != null ? JSON.parse(jsonValue).firstTime : null;
+      if(value==='No'){
+        
+        // old user
+        this.setState({
+          firstTime:false,
+        })
+      }else{
 
+        // new user
+        this.setState({
+          firstTime:true,
+        })
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
+  isUserLoggedIn = async()=>{
+    try {
+      const jsonValue = await AsyncStorage.getItem('token');
+      let value =  jsonValue != null ? jsonValue : null;
+      if(value){
+        let decoded = jwt_decode(value);
+        this.setState({
+          isLoggedIn:true,
+          name:decoded.userId,
+          email:decoded.username
+        })
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }  
 /**
  * to get data from localstorage
  * @param {*} key
  */
 
-  getData = async () => {
-    console.log('test');
+  getData = async (key) => {
     try {
-      const value = await AsyncStorage.getItem('firstTime');
-      if(value !== null) {
-        console.log(value);
-        this.setState({
-          firstTime: !(value === 'No'),
-        })
-      }else{
-        this.setState({firstTime:true});
-      }
+      const jsonValue = await AsyncStorage.getItem(key);
+      let value =  jsonValue != null ? JSON.parse(jsonValue) : null;
+      return value;
     } catch(e) {
       console.log(e);
     }
@@ -108,7 +146,8 @@ export default class App extends React.Component{
     try {
       await AsyncStorage.setItem(key, value)
     } catch (e) {
-        Alert.alert("Error","Something went wrong in the onboarding screen");
+      console.log(e);
+        alert("Error","Something went wrong in the onboarding screen");
     }
   }
 
@@ -141,17 +180,25 @@ export default class App extends React.Component{
   render(){
 
     const Drawer = createDrawerNavigator();
-
+    if(this.state.showLoading)
+      return <Loading title="Loading"/>
+    else
     return (
       <ERContext.Provider
       value={{
         isConnected: this.state.isConnected,
         isLoggedIn : this.state.isLoggedIn,
+        name:this.state.name,
+        email:this.state.email,
         changeState: this.changeState,
+        storeData  : this.storeData
         }}
       >
         <PaperProvider theme={theme}>
-          {this.state.firstTime ? 
+          <StatusBar style="light"/>
+
+          {
+            this.state.firstTime ? 
             <OnboardingScreen onClickStart={this.onClickStart}/>
             :
             !this.state.isLoggedIn?

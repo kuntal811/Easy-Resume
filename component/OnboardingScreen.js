@@ -8,13 +8,14 @@ import { Button } from 'react-native-paper';
 export default class OnboardingScreen extends Component {   
   storeData = async (key,value) => {
     try {
-      await AsyncStorage.setItem(key, value)
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(key, jsonValue)
     } catch (e) {
         Alert.alert("Error","Something went wrong in the onboarding screen");
     }
   }
   hideOnBoardingScreen = ()=>{
-    this.storeData('firstTime','No');
+    this.storeData('isFirstTime',{firstTime:'No'});
     //this.props.onStatusChange(false);
   }
   render() {

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Text, View, TextInput, StyleSheet, ScrollView, Image,Pressable } from 'react-native';
-import { FAB,List, Button,HelperText, Switch,IconButton, Headline, Subheading  } from 'react-native-paper';
+import { List, Button, Switch,IconButton} from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
-
 import * as ImagePicker from 'expo-image-picker';
-
 import ProfileImg from './../assets/profile.png';
 import { ResumeDataContext } from '../ERContext';
 
@@ -235,7 +233,7 @@ export default class ProfileDetails extends Component {
                 
                     title="Education Details"
                     titleStyle={styles.titleStyle}
-                    left={props => <List.Icon {...props} color="#fff" icon="account" />}
+                    left={props => <List.Icon {...props} color="#fff" icon="book" />}
                     style={styles.accordian}
                     theme={{colors:{text: '#fff'}}}
                     >
@@ -245,6 +243,7 @@ export default class ProfileDetails extends Component {
                             {
                                 this.state.resumeData.education.map((data,index)=>{
                                     return <List.Item
+                                                key={index}
                                                 title={data.degreeTitle+','+data.instituteName}
                                                 titleNumberOfLines={2}
                                                 description={data.startYear+'-'+data.endYear+', CGPA:'+data.cgpa+'\n'+data.summary}
@@ -314,12 +313,13 @@ export default class ProfileDetails extends Component {
                             onChangeText={(value)=>this._onChangeInput('education','summary',value)}
                             />
 
-                        <View style={{alignItems:'center'}}>
+                        <View style={styles.addButtonContainer}>
                             <LinearGradient
-                                    colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
-                                    end={{x:0.9,y:0.9}}
-                                    style={[styles.buttonContainer,{marginBottom:20}]}>
-                                    <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('education','education')}>
+                                colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
+                                end={{x:0.9,y:0.9}}
+                                style={styles.addButtonGradient}
+                                >
+                                    <Button style={styles.addButton} labelStyle={styles.addButtonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('education','education')}>
                                         ADD
                                     </Button>
                             </LinearGradient>
@@ -334,7 +334,7 @@ export default class ProfileDetails extends Component {
                 
                 title="Experience Details"
                 titleStyle={styles.titleStyle}
-                left={props => <List.Icon {...props} color="#fff" icon="account" />}
+                left={props => <List.Icon {...props} color="#fff" icon="briefcase" />}
                 style={styles.accordian}
                 theme={{colors:{text: '#fff'}}}
                 >
@@ -345,6 +345,7 @@ export default class ProfileDetails extends Component {
                         {
                             this.state.resumeData.experience.map((data,index)=>{
                                 return <List.Item
+                                            key={index}
                                             title={data.jobTitle+','+data.companyName}
                                             titleNumberOfLines={2}
                                             description={data.startDate+'-'+data.endDate+'\n'+data.summary}
@@ -406,12 +407,13 @@ export default class ProfileDetails extends Component {
                         onChangeText={(value)=>this._onChangeInput('experience','summary',value)}
                         />
 
-                    <View style={{alignItems:'center'}}>
+                    <View style={styles.addButtonContainer}>
                         <LinearGradient
-                                colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
-                                end={{x:0.9,y:0.9}}
-                                style={[styles.buttonContainer,{marginBottom:20}]}>
-                                <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('experience','experience')}>
+                            colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
+                            end={{x:0.9,y:0.9}}
+                            style={styles.addButtonGradient}
+                            >
+                                <Button style={styles.addButton} labelStyle={styles.addButtonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('experience','experience')}>
                                     ADD
                                 </Button>
                         </LinearGradient>
@@ -426,7 +428,7 @@ export default class ProfileDetails extends Component {
                 
                 title="Project Details"
                 titleStyle={styles.titleStyle}
-                left={props => <List.Icon {...props} color="#fff" icon="account" />}
+                left={props => <List.Icon {...props} color="#fff" icon="wrench" />}
                 style={styles.accordian}
                 theme={{colors:{text: '#fff'}}}
                 >
@@ -436,7 +438,8 @@ export default class ProfileDetails extends Component {
                     <View style={styles.dataContainer}>
                         {
                             this.state.resumeData.projects.map((data,index)=>{
-                                return <List.Item
+                                return <List.Item  
+                                            key={index}
                                             title={data.projectName}
                                             titleNumberOfLines={2}
                                             description={data.projectDescription+'\n'+data.startDate+'-'+data.endDate+'\n'+data.summary}
@@ -498,12 +501,13 @@ export default class ProfileDetails extends Component {
                         onChangeText={(value)=>this._onChangeInput('projects','summary',value)}
                         />
 
-                    <View style={{alignItems:'center'}}>
+                    <View style={styles.addButtonContainer}>
                         <LinearGradient
-                                colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
-                                end={{x:0.9,y:0.9}}
-                                style={[styles.buttonContainer,{marginBottom:20}]}>
-                                <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('projects','projects')}>
+                            colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
+                            end={{x:0.9,y:0.9}}
+                            style={styles.addButtonGradient}
+                            >
+                                <Button style={styles.addButton} labelStyle={styles.addButtonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('projects','projects')}>
                                     ADD
                                 </Button>
                         </LinearGradient>
@@ -517,7 +521,7 @@ export default class ProfileDetails extends Component {
                 
                 title="Skill Details"
                 titleStyle={styles.titleStyle}
-                left={props => <List.Icon {...props} color="#fff" icon="account" />}
+                left={props => <List.Icon {...props} color="#fff" icon="podium" />}
                 style={styles.accordian}
                 theme={{colors:{text: '#fff'}}}
                 >
@@ -559,16 +563,17 @@ export default class ProfileDetails extends Component {
                         value={this.state.skills.skillLevel}
                         onChangeText={(value)=>this._onChangeInput('skills','skillLevel',value)}
                         />
-                    <View style={{alignItems:'center',marginTop:10}}>
+                    <View style={styles.addButtonContainer}>
                         <LinearGradient
                             colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
                             end={{x:0.9,y:0.9}}
-                            style={[styles.buttonContainer,{marginBottom:20}]}>
-                                <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('skills','skills')}>
+                            style={styles.addButtonGradient}
+                            >
+                                <Button style={styles.addButton} labelStyle={styles.addButtonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('skills','skills')}>
                                     ADD
                                 </Button>
                         </LinearGradient>
-                </View>
+                    </View>
 
                 </View>
             </List.Accordion>
@@ -578,7 +583,7 @@ export default class ProfileDetails extends Component {
                 
                 title="Hobby Details"
                 titleStyle={styles.titleStyle}
-                left={props => <List.Icon {...props} color="#fff" icon="account" />}
+                left={props => <List.Icon {...props} color="#fff" icon={require('./../assets/icons/drawing.png')} />}
                 style={styles.accordian}
                 theme={{colors:{text: '#fff'}}}
                 >
@@ -614,12 +619,13 @@ export default class ProfileDetails extends Component {
                         value={this.state.hobbies.hobbyName}
                         onChangeText={(value)=>this._onChangeInput('hobbies','hobbyName',value)}
                         />
-                    <View style={{alignItems:'center',marginTop:10}}>
+                    <View style={styles.addButtonContainer}>
                         <LinearGradient
                             colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
                             end={{x:0.9,y:0.9}}
-                            style={[styles.buttonContainer,{marginBottom:20}]}>
-                                <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('hobbies','hobbies')}>
+                            style={styles.addButtonGradient}
+                            >
+                                <Button style={styles.addButton} labelStyle={styles.addButtonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('hobbies','hobbies')}>
                                     ADD
                                 </Button>
                         </LinearGradient>
@@ -633,7 +639,7 @@ export default class ProfileDetails extends Component {
                 
                 title="Language Details"
                 titleStyle={styles.titleStyle}
-                left={props => <List.Icon {...props} color="#fff" icon="account" />}
+                left={props => <List.Icon {...props} color="#fff" icon={require('./../assets/icons/language.png')} />}
                 style={styles.accordian}
                 theme={{colors:{text: '#fff'}}}
                 >
@@ -674,12 +680,14 @@ export default class ProfileDetails extends Component {
                         style={styles.inputStyle}
                         />
                         */}
-                    <View style={{alignItems:'center',marginTop:10}}>
+
+                    <View style={styles.addButtonContainer}>
                         <LinearGradient
                             colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
                             end={{x:0.9,y:0.9}}
-                            style={[styles.buttonContainer,{marginBottom:20}]}>
-                                <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('languages','languages')}>
+                            style={styles.addButtonGradient}
+                            >
+                                <Button style={styles.addButton} labelStyle={styles.addButtonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('languages','languages')}>
                                     ADD
                                 </Button>
                         </LinearGradient>
@@ -693,7 +701,7 @@ export default class ProfileDetails extends Component {
                 
                 title="Custom Section"
                 titleStyle={styles.titleStyle}
-                left={props => <List.Icon {...props} color="#fff" icon="account" />}
+                left={props => <List.Icon {...props} color="#fff" icon={require('./../assets/icons/adjustment.png')} />}
                 style={styles.accordian}
                 theme={{colors:{text: '#fff'}}}
                 >
@@ -742,12 +750,14 @@ export default class ProfileDetails extends Component {
                         value={this.state.custom.description}
                         onChangeText={(value)=>this._onChangeInput('custom','description',value)}
                         />
-                    <View style={{alignItems:'center',marginTop:10}}>
+
+                    <View style={styles.addButtonContainer}>
                         <LinearGradient
                             colors={['rgba(173,127,251,1)','rgba(146,178,253,1)']}
                             end={{x:0.9,y:0.9}}
-                            style={[styles.buttonContainer,{marginBottom:20}]}>
-                                <Button style={styles.button} labelStyle={styles.buttonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('custom','custom')}>
+                            style={styles.addButtonGradient}
+                            >
+                                <Button style={styles.addButton} labelStyle={styles.addButtonText} mode="text" color="#ffffff" onPress={()=>this._addSectionValue('custom','custom')}>
                                     ADD
                                 </Button>
                         </LinearGradient>
@@ -815,15 +825,22 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between'
     },
-    buttonContainer:{
-        width:'60%',
-        alignItems:'center',
-        borderRadius: 30,
+    addButtonContainer:{
+        marginVertical:10,
+        alignItems:'center'
+    },
+    addButtonGradient:{
+        width:'35%',
+        borderRadius:30
+    },
+    addButton:{
+        paddingVertical:3
     },
     nextButton:{
-        paddingVertical: 10,
+        paddingVertical: 0,
     },
     nextButtonText:{
+        paddingVertical:5,
         fontWeight:'bold',
         fontSize:20
     }

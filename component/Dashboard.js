@@ -41,7 +41,11 @@ export class Dashboard extends Component {
                     :
                     // Resumes
                     <View style={styles.resumeContainer}>
+                        <Pressable
+                            onPress={()=>{this.props.navigation.push('Preview',{id:1})}}
+                        >
                         <ResumeCard name="Kuntal Sarkar" email="kuntalsarkar00@gmail.com"/>
+                        </Pressable>
                         <ResumeCard name="M. Dhivya" email="M.dhivya00@gmail.com"/>
                         <ResumeCard name="Rahul Saha" email="RahulSaha@gmail.com"/>
                     </View>

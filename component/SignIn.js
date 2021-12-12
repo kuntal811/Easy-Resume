@@ -96,7 +96,14 @@ class SignIn extends ValidationComponent {
                     console.log(response);
                     if(response.status === 200){
                         if(response.data.login === true){
-                            this.context.changeState('isLoggedIn',true);
+                            //alert(response.data.token);
+                            if(response.data.token){
+                                this.context.changeState('token',response.data.token);
+                                this.context.storeData('token',response.data.token);
+                                this.context.changeState('isLoggedIn',true);
+                            }else{
+                                alert('Someting went wrong! Please restart the app');
+                            }
                         }
                         else
                             this.setState({
