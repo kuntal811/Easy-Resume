@@ -11,7 +11,7 @@ Easy Resume Maker is an android app made  using React Native to simplify the tas
 ![PHP](https://img.shields.io/badge/-PHP-000?&logo=PHP&logoColor=474A8A)
 
 ## UI Design
-![Figma](https://img.shields.io/badge/-Figma-000?style=flat-square&logo=Figma) ![See design in figma](https://www.figma.com/file/0hbQqwk1Pcf7t785pnQ3z6/Resume-builder-UI)
+![Figma](https://img.shields.io/badge/-Figma-000?style=flat-square&logo=Figma) [See design in figma](https://www.figma.com/design/0hbQqwk1Pcf7t785pnQ3z6/Resume-builder-UI?node-id=0%3A1&t=FUbCJGFhCtUDIjoN-1)
 
 ## Installation
 In the root project directory run this command
